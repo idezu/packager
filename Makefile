@@ -1,3 +1,5 @@
+CC = gcc
+
 all: src
 
 .PHONY: src
