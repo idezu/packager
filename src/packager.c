@@ -21,18 +21,26 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <dirent.h>
 
 #include <options.h>
 #include <packages.h>
 
 char *version = "packager  Copyright (C) 2022  idezu\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions;";
 
-int install(bool *flags,char *packages_Install[])
+int install(bool *flags,char *packages[])
 {
 
 }
 
-int sources(bool * flags,char *packages_Merge[])
+int install_Local(bool *flags, FILE *package)
+{
+
+
+	fclose(package);
+}
+
+int sources(bool * flags,char *packages[])
 {
 
 }
@@ -41,10 +49,14 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 {
 	if (strcmp(argv[1], "install"))
 	{
+		int local_Pkg_C = 0;
+		char **local_Pkg = NULL;
+		int package_C = 0;
 		for (size_t i = 2; i < argc; i++)
 		{
 			int arg_Add = 0;
 			char *buffer = argv[i];
+			printf("searching through the database...\n");
 			if (i < argc-1)
 			{
 				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
@@ -55,13 +67,39 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 				exit(EXIT_FAILURE);
 			}else if (arg_Add == -1)
 			{
-					find_Packages(package_list, buffer);
+				FILE *package_File= NULL;
+				//check if it's a local package 
+				if ((package_File = fopen(buffer,"r")) != NULL)
+				{	
+					check_package(buffer,local_Pkg);
+					local_Pkg_C ++;
+					break;
+				}
+				fclose(package_File);
+				package_C++;
+				find_Packages(package_list, buffer);
+
 			}else if (arg_Add == -3)
-			 	{
-			 		printf("%s", version);
-			 	}
+			{
+				printf("%s", version);
+				exit(EXIT_SUCCESS);
+			}
 			i += arg_Add;
 		}
+		printf("you're going to install"); 
+		for (size_t i = 0; i < package_C; i++)
+		{
+			printf(" %s",package_list[i]);
+		}
+		printf("and");
+		for (size_t i = 0; i < local_Pkg_C; i++)
+		{
+			printf("%s",local_Pkg);
+		}
+		
+		printf("\n");
+		char *answer;
+		fscanf(stdin,"%s",&answer);			
 		install(caller_Flag,package_list);
 	}else if (strcmp(argv[1], "sources"))
 	{
