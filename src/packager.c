@@ -22,143 +22,154 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <options.h>
 #include <packages.h>
 
-char *version = "packager  Copyright (C) 2022  idezu\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions;";
+struct cmd_s 
+{
+  	char *name;
+  	void (*callback)( int, char ** );
+  	void (*help)( void );
+} 
+cmd_table[] = {
+//  	{ "convert", convert_main, convert_help },
+//  	{ "convertdb", convertdb_main, convertdb_help },
+//  	{ "create", create_main, create_help },
+//  	{ "createdb", createdb_main, createdb_help },
+//  	{ "dumpdb", dumpdb_main, dumpdb_help },
+	{ "sources", sources, sources_help },
+  	{ "install", install, install_help },
+//  	{ "remove", remove_main, remove_help },
+//  	{ "repairdb", repairdb_main, repairdb_help },
+//  	{ "status", status_main, status_help },
+  	{ NULL, NULL, NULL }
+};
 
-int install(const options flags,char *packages_Install[])
+void version_callback();
+void help();
+
+
+
+int main (int argc, char *argv[], char *env[])
 {
 
-}
-
-int sources(const options flags,char *packages_Merge[])
-{
-
-}
-
-void packager(int argc,char *argv[],options *flags ,char *package_list[])
-{
-	if (strcmp(argv[1], "install"))
-	{
-		for (size_t i = 2; i < argc; i++)
-		{
-			int arg_Add = 0;
-			char *buffer = argv[i];
-			if (i < argc-1)
-			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], flags );
-			}else search_Through_Options (buffer, NULL, flags );
-
-			if (arg_Add < -1)
-			{
-				exit(EXIT_FAILURE);
-			}else if (arg_Add == -1)
-			{
-					find_Packages(package_list, buffer);
-			}else if (arg_Add == -3)
-			 	{
-			 		printf("%s", version);
-			 	}
-			i += arg_Add;
-		}
-		install(*flags ,package_list);
-	}else if (strcmp(argv[1], "sources"))
-	{
-		for (size_t i = 2; i < argc; i++)
-		{
-			int arg_Add = 0;
-			char *buffer = argv[i];
-			if (i < argc-1)
-			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], flags );
-			}else search_Through_Options (buffer, NULL, flags );
-
-			if (arg_Add < -1)
-			{
-				exit(EXIT_FAILURE);
-			}else if (arg_Add == -1)
-			{
-					find_Packages(package_list, buffer);
-			}
-			i += arg_Add;
-		}
-		sources(*flags ,package_list);
-	}
-}
-
-
-int main (int argc, char *argv[])
-{
-
-	// allocate the variable needed
-	char **packages_ar = NULL;
-	if (allocator(packages_ar))
-		{
-			deallocator(packages_ar);
-		}
-	int arg_Add = 0;
-	options flags;
+		// allocate the variable needed
 	
-
-	if (*argv[0] == '-')
+	char *exec_Name = *argv, *cmd_Name = NULL, cmd_argv = NULL;
+	int arg_Add = 0, cmd_argc = 0, error = 0;
+	bool help = false;
+		//for global variables
+	for (size_t i = 0; i < argc; i++)
 	{
-		fprintf(stderr, "you entered no name for the application");
-		exit(EXIT_FAILURE);
-	}
-	if (strcmp(*argv, "packager"))
-	{
-		packager(argc,argv,&flags,packages_ar);
-	}
-	else if (strcmp(*argv, "installck"))
-	{
-		for (size_t i = 1; i < argc; i++)
+		char *curr = argv[i];
+		if (!strcmp(curr,"--help") || !strcmp(curr,"-h"))
 		{
-			char *buffer = argv[i];
-			if (i < argc-1)
-			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], &flags);
-			}else search_Through_Options (buffer, NULL, &flags);
-
-			if (arg_Add < -1)
-			{
-				exit(EXIT_FAILURE);
-			}else if (arg_Add == -1)
-			{
-					find_Packages(packages_ar, buffer);
-			}
-			i += arg_Add;
-		}
-		install(flags,packages_ar);
-	}else if (strcmp(*argv, "sourcesck"))
-	{
-		for (size_t i = 1; i < argc; i++)
+			help = true;
+		}else if (!strcmp(curr, "--version") || strcmp(curr,"-v"))
 		{
-			char *buffer = argv[i];
-			if (i < argc-1)
-			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], &flags);
-			}else search_Through_Options (buffer, NULL, &flags);
-
-			if (arg_Add < -1)
-			{
-				exit(EXIT_FAILURE);
-			}else if (arg_Add == -1)
-			{
-					find_Packages(packages_ar, buffer);
-			}
-			i += arg_Add;
+			version_callback();
+			exit(EXIT_SUCCESS);
+		}else if (!strcmp(*curr, '-'))
+		{
+			cmd_Name = curr;
+			cmd_argc = argc - i - 1;
+			if ( cmd_argc > 0 ) cmd_argv = argv + i + 1;
+     		else cmd_argv = NULL;
+      		break;
+		}else
+		{
+			cmd_argc = argc - i - 1;
+			if ( cmd_argc > 0 ) cmd_argv = argv + i + 1;
+     		else cmd_argv = NULL;
+			break;
 		}
-		sources(flags,packages_ar);
+		
+
+	}
+
+	if (!strcmp(exec_Name, "installck"))
+	{
+		if (help)
+		{
+			install_help();
+		}
+		
+		install(cmd_argc,cmd_argv);
+	}else if (!strcmp(exec_Name, "sourcesck"))
+	{
+		if (help)
+		{
+			sources_help();
+		}
+
+		sources(cmd_argc,cmd_argv);
 	}else
-	{
-		packager(argc,argv,&flags,packages_ar);
+	{	//we'll search the command name		
+		
+		if ( help )
+		{
+			if (cmd_Name)
+			{
+				for (int i = 0, error = 5; cmd_table[i].name != NULL ; ++i)
+				{
+					if ( cmd_table[i].help ) 
+					{
+						cmd_table[i].help();
+						error = 0;
+					}
+					else fprintf( stderr, "Unknown command %s.  Try 'mpkg --help'.\n", cmd_Name );
+					break;
+				}
+			}else help();
+		}else if ( error == 0 ) 
+		{
+			if ( cmd_Name ) 
+			{
+				for(int i = 0, error = 5; cmd_table[i].name != NULL ; ++i) 
+				{
+					if ( strcmp( cmd_Name, cmd_table[i].name ) == 0 ) 
+					{
+						if ( cmd_table[i].callback ) 
+						{
+							cmd_table[i].callback( cmd_argc, cmd_argv );
+							error = 0;
+						}
+						else fprintf( stderr, "Command %s not implemented\n", cmd_table[i].name );
+						break;
+					}
+				}
+
+				if ( error != 0 ) fprintf( stderr, "Unknown command %s.  Try 'mpkg --help'.\n", cmd_Name );
+			}
+			else fprintf( stderr, "A command is required.  Try 'mpkg --help'.\n" );
+		}
+		
 	}
 
-
-
-
-	printf("Hello, World!\n");
 	return EXIT_SUCCESS;
 }
 
+void help()
+{
+	printf( "This is the package gloabl options.  It gives usage information" );
+  	printf( " on specified packager commands.  Usage:\n" );
+  	printf( "\n" );
+  	printf( "packager --help [command]\n" );
+	for (size_t i = 0; i < 3; i++)
+	{
+		cmd_table[i].help();
+	}
+	
+}
+
+void version_callback()
+{
+#ifdef BUILD_DATE
+	printf( "packager %s, built on %s\n", VERSION, BUILD_DATE );
+#else /* !defined(BUILD_DATE) */	
+	printf( "packager %s\n", VERSION );
+#endif /* BUILD_DATE */
+	printf("packager  Copyright (C) 2022  idezu\n");
+	printf("This program comes with ABSOLUTELY NO WARRANTY;\n");
+	printf("This is free software, and you are welcome to \n");
+	printf("redistribute it under certain conditions;");
+}
