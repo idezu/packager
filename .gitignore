@@ -1,5 +1,16 @@
+# General-purpose rules
 *~
 *.swp
+*.orig
+*.rej
+
+# generated binary
 packager
-build/*.o
+
+# vscode stuff
 .vscode
+
+# generated object files
+*.o
+*.la
+*.lo

@@ -100,7 +100,6 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 		printf("\n");
 		char *answer;
 		fscanf(stdin,"%s",&answer);			
-		install(caller_Flag,package_list);
 	}else if (strcmp(argv[1], "sources"))
 	{
 		for (size_t i = 2; i < argc; i++)
@@ -135,7 +134,7 @@ int main (int argc, char *argv[])
 		{
 			deallocator(packages_ar);
 		}
-	int arg_Add = 0;
+	int arg_Add = 0, error = 0;
 	bool *caller_Flag = NULL;
 
 	if (*argv[0] == '-')
@@ -143,18 +142,37 @@ int main (int argc, char *argv[])
 		fprintf(stderr, "you entered no name for the application");
 		exit(EXIT_FAILURE);
 	}
-	if (strcmp(*argv, "packager"))
+	if (!strcmp(*argv, "packager"))
 	{
-		packager(argc,argv,caller_Flag,packages_ar);
+		packager(argc,argv,caller_Flag,packages_ar,&error);
 	}
-	else if (strcmp(*argv, "installck"))
+	else if (!strcmp(*argv, "installck"))
 	{
 		for (size_t i = 1; i < argc; i++)
 		{
 			char *buffer = argv[i];
 			if (i < argc-1)
 			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
+				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag, &error);
+			}else search_Through_Options (buffer, NULL, caller_Flag,&error);
+
+			if (error == 2)
+			{
+					find_Packages(packages_ar, buffer,&error);
+			}else if (error != 0)
+			{
+				exit(error);
+			}
+			i += arg_Add;
+		}
+	}else if (!strcmp(*argv, "sourcesck"))
+	{
+		for (size_t i = 1; i < argc; i++)
+		{
+			char *buffer = argv[i];
+			if (i < argc-1)
+			{
+				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag,&error);
 			}else search_Through_Options (buffer, NULL, caller_Flag);
 
 			if (arg_Add < -1)
@@ -166,27 +184,6 @@ int main (int argc, char *argv[])
 			}
 			i += arg_Add;
 		}
-		install(caller_Flag,packages_ar);
-	}else if (strcmp(*argv, "sourcesck"))
-	{
-		for (size_t i = 1; i < argc; i++)
-		{
-			char *buffer = argv[i];
-			if (i < argc-1)
-			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
-			}else search_Through_Options (buffer, NULL, caller_Flag);
-
-			if (arg_Add < -1)
-			{
-				exit(EXIT_FAILURE);
-			}else if (arg_Add == -1)
-			{
-					find_Packages(packages_ar, buffer);
-			}
-			i += arg_Add;
-		}
-		sources(caller_Flag,packages_ar);
 	}
 
 	else
@@ -194,10 +191,11 @@ int main (int argc, char *argv[])
 		packager(argc,argv,caller_Flag,packages_ar);
 	}
 
+Install:
+		install(caller_Flag,packages_ar);
+Sources:
+		sources(caller_Flag,packages_ar);
 
-
-
-	printf("Hello, World!\n");
 	return EXIT_SUCCESS;
 }
 
