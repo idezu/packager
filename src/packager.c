@@ -150,7 +150,7 @@ int main (int argc, char *argv[], char *env[])
 
 void help()
 {
-	printf( "This is the package gloabl options.  It gives usage information" );
+	printf( "This is the package globale options.  It gives usage information" );
   	printf( " on specified packager commands.  Usage:\n" );
   	printf( "\n" );
   	printf( "packager --help [command]\n" );
@@ -158,6 +158,7 @@ void help()
 	{
 		cmd_table[i].help();
 	}
+	version_help();
 	
 }
 
