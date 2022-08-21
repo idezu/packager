@@ -1,0 +1,5 @@
+*~
+*.swp
+packager
+build/*.o
+.v*
