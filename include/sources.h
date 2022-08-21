@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef __SOURCES_H__
+#define __SOURCES_H__
 struct S_options
 {
     char *name;
@@ -15,3 +15,5 @@ sources_options[] = {
 
 void sources_help( void );
 void sources (int , char **);
+
+#endif

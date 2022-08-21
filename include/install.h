@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __INSTALL_H__
+#define __INSTALL_H__
 
 struct I_options
 {
@@ -15,3 +16,5 @@ install_options[] = {
 
 void install_help( void );
 void install (int , char **);
+
+#endif

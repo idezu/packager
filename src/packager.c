@@ -22,7 +22,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <packages.h>
+#include <global.h>
 
 struct cmd_s 
 {
@@ -44,9 +44,8 @@ cmd_table[] = {
   	{ NULL, NULL, NULL }
 };
 
-
 void version_callback();
-void help();
+void Help();
 
 
 
@@ -55,7 +54,7 @@ int main (int argc, char *argv[], char *env[])
 
 		// allocate the variable needed
 	
-	char *exec_Name = *argv, *cmd_Name = NULL, cmd_argv = NULL;
+	char *exec_Name = *argv, *cmd_Name = NULL, **cmd_argv = NULL;
 	int arg_Add = 0, cmd_argc = 0, error = 0;
 	bool help = false;
 		//for global variables
@@ -69,7 +68,7 @@ int main (int argc, char *argv[], char *env[])
 		{
 			version_callback();
 			exit(EXIT_SUCCESS);
-		}else if (!strcmp(*curr, '-'))
+		}else if (*curr = '-')
 		{
 			cmd_Name = curr;
 			cmd_argc = argc - i - 1;
@@ -120,7 +119,7 @@ int main (int argc, char *argv[], char *env[])
 					else fprintf( stderr, "Unknown command %s.  Try 'mpkg --help'.\n", cmd_Name );
 					break;
 				}
-			}else help();
+			}else Help();
 		}else if ( error == 0 ) 
 		{
 			if ( cmd_Name ) 
@@ -149,7 +148,7 @@ int main (int argc, char *argv[], char *env[])
 	return EXIT_SUCCESS;
 }
 
-void help()
+void Help()
 {
 	printf( "This is the package global options.  It gives usage information" );
   	printf( " on specified packager commands.  Usage:\n" );
@@ -159,7 +158,6 @@ void help()
 	{
 		cmd_table[i].help();
 	}
-	version_help();
 	for (size_t i = 0; i < NUMBER_OF_INSTALL_OPTIONS; i++)
 	{
 		printf("%s, %s\t%s\n\t%s",install_options->symbole,install_options->truc,install_options->name,install_options->usage);

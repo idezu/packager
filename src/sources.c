@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <sources.h>
+
 void sources(int argc,char * argv[])
 {
 
