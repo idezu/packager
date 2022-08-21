@@ -2,4 +2,4 @@
 *.swp
 packager
 build/*.o
-.v*
+.vscode

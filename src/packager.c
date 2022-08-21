@@ -27,12 +27,12 @@
 
 char *version = "packager  Copyright (C) 2022  idezu\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions;";
 
-int install(bool *flags,char *package_Install[])
+int install(bool *flags,char *packages_Install[])
 {
 
 }
 
-int sources(bool * flags,char *package_Merge[])
+int sources(bool * flags,char *packages_Merge[])
 {
 
 }
