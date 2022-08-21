@@ -27,17 +27,17 @@
 
 char *version = "packager  Copyright (C) 2022  idezu\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions;";
 
-int install(bool *flags,char *packages_Install[])
+int install(const options flags,char *packages_Install[])
 {
 
 }
 
-int sources(bool * flags,char *packages_Merge[])
+int sources(const options flags,char *packages_Merge[])
 {
 
 }
 
-void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
+void packager(int argc,char *argv[],options *flags ,char *package_list[])
 {
 	if (strcmp(argv[1], "install"))
 	{
@@ -47,8 +47,8 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 			char *buffer = argv[i];
 			if (i < argc-1)
 			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
-			}else search_Through_Options (buffer, NULL, caller_Flag);
+				arg_Add = search_Through_Options(buffer, argv[i+1], flags );
+			}else search_Through_Options (buffer, NULL, flags );
 
 			if (arg_Add < -1)
 			{
@@ -62,7 +62,7 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 			 	}
 			i += arg_Add;
 		}
-		install(caller_Flag,package_list);
+		install(*flags ,package_list);
 	}else if (strcmp(argv[1], "sources"))
 	{
 		for (size_t i = 2; i < argc; i++)
@@ -71,8 +71,8 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 			char *buffer = argv[i];
 			if (i < argc-1)
 			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
-			}else search_Through_Options (buffer, NULL, caller_Flag);
+				arg_Add = search_Through_Options(buffer, argv[i+1], flags );
+			}else search_Through_Options (buffer, NULL, flags );
 
 			if (arg_Add < -1)
 			{
@@ -83,7 +83,7 @@ void packager(int argc,char *argv[],bool *caller_Flag,char *package_list[])
 			}
 			i += arg_Add;
 		}
-		sources(caller_Flag,package_list);
+		sources(*flags ,package_list);
 	}
 }
 
@@ -98,7 +98,8 @@ int main (int argc, char *argv[])
 			deallocator(packages_ar);
 		}
 	int arg_Add = 0;
-	bool *caller_Flag = NULL;
+	options flags;
+	
 
 	if (*argv[0] == '-')
 	{
@@ -107,7 +108,7 @@ int main (int argc, char *argv[])
 	}
 	if (strcmp(*argv, "packager"))
 	{
-		packager(argc,argv,caller_Flag,packages_ar);
+		packager(argc,argv,&flags,packages_ar);
 	}
 	else if (strcmp(*argv, "installck"))
 	{
@@ -116,8 +117,8 @@ int main (int argc, char *argv[])
 			char *buffer = argv[i];
 			if (i < argc-1)
 			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
-			}else search_Through_Options (buffer, NULL, caller_Flag);
+				arg_Add = search_Through_Options(buffer, argv[i+1], &flags);
+			}else search_Through_Options (buffer, NULL, &flags);
 
 			if (arg_Add < -1)
 			{
@@ -128,7 +129,7 @@ int main (int argc, char *argv[])
 			}
 			i += arg_Add;
 		}
-		install(caller_Flag,packages_ar);
+		install(flags,packages_ar);
 	}else if (strcmp(*argv, "sourcesck"))
 	{
 		for (size_t i = 1; i < argc; i++)
@@ -136,8 +137,8 @@ int main (int argc, char *argv[])
 			char *buffer = argv[i];
 			if (i < argc-1)
 			{
-				arg_Add = search_Through_Options(buffer, argv[i+1], caller_Flag);
-			}else search_Through_Options (buffer, NULL, caller_Flag);
+				arg_Add = search_Through_Options(buffer, argv[i+1], &flags);
+			}else search_Through_Options (buffer, NULL, &flags);
 
 			if (arg_Add < -1)
 			{
@@ -148,12 +149,10 @@ int main (int argc, char *argv[])
 			}
 			i += arg_Add;
 		}
-		sources(caller_Flag,packages_ar);
-	}
-
-	else
+		sources(flags,packages_ar);
+	}else
 	{
-		packager(argc,argv,caller_Flag,packages_ar);
+		packager(argc,argv,&flags,packages_ar);
 	}
 
 

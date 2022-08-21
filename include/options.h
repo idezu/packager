@@ -4,7 +4,13 @@
 
 #define HELP_OPTS 0
 
-int search_Through_Options(char *arg, char *Maybedata, _Bool *op_Sheet);
+typedef struct 
+{
+    NULL NULL,
+}options;
+
+
+int search_Through_Options(char *arg, char *Maybedata, options *op_Sheet);
 
 int allocator (char **pack_Ar);
 

@@ -31,7 +31,7 @@ void deallocator(char **pack_Ar)
  * return how much
  * return a negative value if an error occurred
 */
-int search_Through_Options(char *arg, char *Maybedata, _Bool *op_Sheet)
+int search_Through_Options(char *arg, char *Maybedata, options *op_Sheet)
 {
 	if (*arg != '-')
   	{
