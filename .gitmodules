@@ -1,0 +1,3 @@
+[submodule "build/packages"]
+	path = build/packages
+	url = https://github.com/idezu/package-repo-for-packager.git
