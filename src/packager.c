@@ -44,6 +44,7 @@ cmd_table[] = {
   	{ NULL, NULL, NULL }
 };
 
+
 void version_callback();
 void help();
 
@@ -150,7 +151,7 @@ int main (int argc, char *argv[], char *env[])
 
 void help()
 {
-	printf( "This is the package globale options.  It gives usage information" );
+	printf( "This is the package global options.  It gives usage information" );
   	printf( " on specified packager commands.  Usage:\n" );
   	printf( "\n" );
   	printf( "packager --help [command]\n" );
@@ -159,6 +160,15 @@ void help()
 		cmd_table[i].help();
 	}
 	version_help();
+	for (size_t i = 0; i < NUMBER_OF_INSTALL_OPTIONS; i++)
+	{
+		printf("%s, %s\t%s\n\t%s",install_options->symbole,install_options->truc,install_options->name,install_options->usage);
+	}
+	for (size_t i = 0; i < NUMBER_OF_SOURCES_OPTIONS; i++)
+	{
+		printf("%s, %s\t%s\n\t%s",sources_options->symbole,sources_options->truc,sources_options->name,sources_options->usage);
+	}
+	
 	
 }
 
