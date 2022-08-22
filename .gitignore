@@ -1,5 +1,14 @@
+# General-purpose rules
 *~
-*.swp
+*.sw?
+*.orig
+*.rej
+
+# generated mpkg binary
 packager
-build/*.o
+
+# vscode things
 .vscode
+
+# generated object files
+*.o
