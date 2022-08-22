@@ -1,19 +1,13 @@
-#ifndef __SOURCES_H__
-#define __SOURCES_H__
-struct S_options
+#pragma once
+
+#include <global.h>
+
+struct options sources_options[] = 
 {
-    char *name;
-    char *usage;
-    char *symbole;
-    char *truc;
-}
-sources_options[] = {
-    { "", "", "", ""}
+    { NULL, NULL, NULL, NULL, NULL }    
 };
 
 #define NUMBER_OF_SOURCES_OPTIONS 1
 
 void sources_help( void );
 void sources (int , char **);
-
-#endif

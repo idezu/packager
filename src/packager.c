@@ -30,7 +30,8 @@ struct cmd_s
   	void (*callback)( int, char ** );
   	void (*help)( void );
 } 
-cmd_table[] = {
+cmd_table[] = 
+{
 //  	{ "convert", convert_main, convert_help },
 //  	{ "convertdb", convertdb_main, convertdb_help },
 //  	{ "create", create_main, create_help },
@@ -160,11 +161,11 @@ void Help()
 	}
 	for (size_t i = 0; i < NUMBER_OF_INSTALL_OPTIONS; i++)
 	{
-		printf("%s, %s\t%s\n\t%s",install_options->symbole,install_options->truc,install_options->name,install_options->usage);
+		install_options[i]->usage;
 	}
 	for (size_t i = 0; i < NUMBER_OF_SOURCES_OPTIONS; i++)
 	{
-		printf("%s, %s\t%s\n\t%s",sources_options->symbole,sources_options->truc,sources_options->name,sources_options->usage);
+		sources_options[i].usage;
 	}
 	
 	
