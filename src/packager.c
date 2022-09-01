@@ -159,16 +159,7 @@ void Help()
 	{
 		cmd_table[i].help();
 	}
-	for (size_t i = 0; i < NUMBER_OF_INSTALL_OPTIONS; i++)
-	{
-		install_options[i]->usage;
-	}
-	for (size_t i = 0; i < NUMBER_OF_SOURCES_OPTIONS; i++)
-	{
-		sources_options[i].usage;
-	}
-	
-	
+		
 }
 
 void version_callback()
