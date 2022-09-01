@@ -16,6 +16,7 @@ void install_root(char *directory,char **packages)
 
 }
 
+// TODO  install function
 void install(int argc,char *argv[])
 {
 
