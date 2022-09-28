@@ -1,6 +1,3 @@
 [submodule "build/packages"]
 	path = build/packages
 	url = https://github.com/idezu/package-repo-for-packager.git
-[submodule "3rdParty/libarchive"]
-	path = 3rdParty/libarchive
-	url = https://github.com/libarchive/libarchive/commit/6c3301111caa75c76e1b2acb1afb2d71341932ef
